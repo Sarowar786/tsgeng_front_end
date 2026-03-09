@@ -1,15 +1,13 @@
 import type { Metadata } from "next";
-import { Nunito_Sans } from "next/font/google";
+import { Poppins } from "next/font/google";
 import "./globals.css";
-import toast, { Toaster } from 'react-hot-toast';
 import ReduxProvider from "@/redux/ReduxProvider";
-// import Navbar from "@/components/Navbar/page";
-// import Footer from "@/components/Footer/page";
+import { Toaster } from "sonner";
 
-const nunitoSans = Nunito_Sans({
-  variable: "--font-nunito-sans",
+const poppins = Poppins({
   subsets: ["latin"],
-  weight: ["200", "300", "400", "500", "600", "700", "800", "900"],
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-poppins",
 });
 
 export const metadata: Metadata = {
@@ -31,88 +29,31 @@ export default function RootLayout({
         <link rel="preconnect" href="https://images.unsplash.com" />
         <link rel="dns-prefetch" href="https://images.unsplash.com" />
       </head>
+
       <body
-        className={`${nunitoSans.variable} antialiased bg-white text-slate-900`}
+        className={`${poppins.className} antialiased bg-white text-slate-900`}
       >
         <ReduxProvider>
-          {/* <Navbar /> */}
-        {children}
-        <Toaster
-          position="bottom-right"
-          gutter={12}
-          toastOptions={{
-            duration: 3000,
+          {children}
 
-            style: {
-              background: "rgba(10, 26, 47, 0.75)",
-              backdropFilter: "blur(10px)",
-              color: "#fff",
-              borderRadius: "14px",
-              border: "1px solid rgba(255,255,255,0.12)",
-              boxShadow: "0 10px 30px rgba(0,0,0,0.25)",
-              padding: "12px 14px",
-              fontSize: "14px",
-              fontWeight: 600,
-            },
-
-
-            // Default icon colors (for loading, normal)
-            iconTheme: {
-              primary: "#A3E635", // brand-green
-              secondary: "#0A1A2F",
-            },
-
-            success: {
+          <Toaster
+            position="bottom-right"
+            toastOptions={{
+              duration: 3000,
               style: {
-                background: "rgba(11, 79, 74, 0.95)", // brand-teal-ish
-                border: "1px solid rgba(163, 230, 53, 0.25)",
-              },
-              iconTheme: { primary: "#A3E635", secondary: "#0b4f4a" },
-            },
-
-            error: {
-              style: {
-                background: "rgba(255, 121, 108, 0.95)", // brand-coral
-                border: "1px solid rgba(255,255,255,0.25)",
-              },
-              iconTheme: { primary: "#FFFFFF", secondary: "#FF796C" },
-            },
-
-            loading: {
-              style: {
-                background: "#0A1A2F",
+                background: "rgba(10, 26, 47, 0.75)",
+                backdropFilter: "blur(10px)",
+                color: "#fff",
+                borderRadius: "14px",
                 border: "1px solid rgba(255,255,255,0.12)",
+                boxShadow: "0 10px 30px rgba(0,0,0,0.25)",
+                padding: "12px 14px",
+                fontSize: "14px",
+                fontWeight: 600,
               },
-            },
-          }}
-        />
+            }}
+          />
         </ReduxProvider>
-        {/* <Footer/> */}
-        {/* Hidden Google Translate Element */}
-        <div id="google_translate_element"></div>
-
-        {/* Google Translate Script */}
-        <script
-          type="text/javascript"
-          dangerouslySetInnerHTML={{
-            __html: `
-              function googleTranslateElementInit() {
-                new google.translate.TranslateElement({
-                  pageLanguage: 'en',
-                  includedLanguages: 'en,zh-CN',
-                  autoDisplay: false,
-                  layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL
-                }, 'google_translate_element');
-              }
-            `,
-          }}
-        />
-        <script
-          type="text/javascript"
-          src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
-          async
-          defer
-        ></script>
       </body>
     </html>
   );
