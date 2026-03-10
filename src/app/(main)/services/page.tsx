@@ -12,8 +12,8 @@ export default function Services() {
           </span>
         </div>
         <div className="flex flex-col items-center justify-center gap-4">
-            <h1 className="text-[40px] font-bold text-white">Every Tool Your Fleet</h1>
-            <p className="text-[16px] font-normal text-white/65 w-131">From AI-powered quote generation and vehicle upfitting to fleet consulting and finance — FleetQuoteAI is the all-in-one platform built for commercial fleet professionals.</p>
+            <h1 className="text-2xl md:text-[40px] font-bold text-white">Every Tool Your Fleet</h1>
+            <p className="text-[12px] md:text-[16px] font-normal text-white/65 md:w-131">From AI-powered quote generation and vehicle upfitting to fleet consulting and finance — FleetQuoteAI is the all-in-one platform built for commercial fleet professionals.</p>
         </div>
       </div>
         <ServiceSection />

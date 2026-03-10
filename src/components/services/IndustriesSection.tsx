@@ -94,7 +94,7 @@ export default function IndustriesSection() {
               </div>
             </div>
             {/* Stats */}
-            <div className="grid grid-cols-2 gap-8 mb-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
               {stats.map((stat, index) => (
                 <div
                   key={index}
