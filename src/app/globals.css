@@ -162,6 +162,7 @@
   --shadow-xl: var(--shadow-xl);
   --shadow-2xl: var(--shadow-2xl);
   --color-brand-primary: #333333;
+  --color-herobg : #1C2B4A;
 }
 
 @layer base {
