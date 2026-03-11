@@ -3,7 +3,7 @@ import { Button } from '../ui/button'
 import Link from 'next/link'
 import logo from '../../../public/images/logo.png'
 import Image from 'next/image'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet'
 import { TableOfContents } from 'lucide-react'
 
@@ -11,7 +11,7 @@ export default function Navbar() {
   const pathname = usePathname();
   const isActive = (href: string) =>
     pathname === href || pathname.startsWith(href + "/");
-  
+  const router = useRouter();
   const navItem = [
     { title: "Home", link: "/" },
     { title: "Services", link: "/services" },
@@ -55,7 +55,7 @@ export default function Navbar() {
                 ))}
               </div>
               <div className='mt-6 flex flex-col gap-4'>
-                <Button className='bg-primary text-white border-brand-primary hover:bg-primary hover:text-white duration-300 font-normal text-[16px] rounded-xl hover:border-none cursor-pointer h-10'>
+                <Button onClick={()=>{router.push('/requestquote')}} className='bg-primary text-white border-brand-primary hover:bg-primary hover:text-white duration-300 font-normal text-[16px] rounded-xl hover:border-none cursor-pointer h-10'>
                   Request a Quote
                 </Button>
                 <Button className='bg-transparent text-brand-primary border border-brand-primary hover:bg-primary hover:text-white duration-300 font-normal text-[16px] rounded-xl hover:border-primary cursor-pointer h-10'>
@@ -68,7 +68,7 @@ export default function Navbar() {
 
         {/* Desktop Button */}
         <div className='hidden lg:flex gap-4'>
-          <Button className='bg-primary text-white border-brand-primary hover:bg-primary hover:text-white duration-300 font-normal text-[16px] rounded-xl hover:border-none cursor-pointer h-10'>
+          <Button onClick={()=>{router.push('/requestquote')}} className='bg-primary text-white border-brand-primary hover:bg-primary hover:text-white duration-300 font-normal text-[16px] rounded-xl hover:border-none cursor-pointer h-10'>
             Request a Quote
           </Button>
           <Button className='bg-transparent text-brand-primary border border-brand-primary hover:bg-primary hover:text-white duration-300 font-normal text-[16px] rounded-xl hover:border-primary cursor-pointer h-10'>
