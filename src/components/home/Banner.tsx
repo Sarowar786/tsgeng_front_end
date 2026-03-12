@@ -59,15 +59,6 @@ export default function Banner() {
               </Link>
             </Button>
 
-            <Button
-              variant="outline"
-              size="lg"
-              className="border-white text-white bg-transparent hover:bg-white hover:text-black"
-              asChild
-            >
-              <Link href="#">Admin Login</Link>
-            </Button>
-
           </div>
 
           {/* Features */}

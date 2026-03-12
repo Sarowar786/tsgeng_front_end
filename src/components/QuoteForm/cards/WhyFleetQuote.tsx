@@ -29,7 +29,7 @@ export default function WhyFleetQuote() {
   ];
 
   return (
-    <div className="bg-white rounded-[2rem] p-8 border border-gray-100 shadow-xl shadow-gray-200/30 space-y-8">
+    <div className="bg-white rounded-4xl p-8 border border-gray-100 shadow-xl shadow-gray-200/30 space-y-8">
       <h3 className="text-xs font-bold text-brand-primary flex items-center gap-2">
         Why FleetQuoteAI?
       </h3>

@@ -13,8 +13,11 @@ import {
   FieldGroup,
 } from "@/components/ui/field";
 import { schema } from "@/components/validation/validation";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function ContactForm() {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -25,6 +28,11 @@ export default function ContactForm() {
 
   const onSubmit = (data: FieldValues) => {
     console.log(data);
+    toast.success("Message sent successfully!");
+
+    setTimeout(() => {
+      router.push("/");
+    }, 1200);
   };
 
   return (

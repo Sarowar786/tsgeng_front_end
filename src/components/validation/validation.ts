@@ -33,3 +33,50 @@ export const quoteSchema = z.object({
   upfitNeeds: z.array(z.string()).optional(),
   specialRequirements: z.string().optional(),
 });
+
+
+// login schema
+export const loginSchema = z.object({
+  email: z
+    .string()
+    .trim()
+    .nonempty("Email is required")
+    .email("Invalid email address"),
+
+  password: z
+    .string()
+    .min(1, "Password is required")
+    .max(10, "Password max characters"),
+
+  terms: z.boolean().refine((val) => val === true, {
+    message: "You must accept Terms and Privacy Policy",
+  }),
+});
+
+
+// register schema
+export const registerSchema = z
+  .object({
+    full_name: z.string().nonempty("Name is required"),
+    username: z.string().nonempty("Username is required"),
+    email: z
+      .string()
+      .trim()
+      .nonempty("Email is required")
+      .email("Invalid email address"),
+    password: z
+      .string()
+      .min(1, "Password is required")
+      .max(10, "Password must be at least 10 characters"),
+    confirm_password: z
+      .string()
+      .min(1, "Password is required")
+      .max(10, "Password must be at least 10 characters"),
+      terms: z.literal(true, {
+  message: "You must accept Terms and Privacy Policy",
+}),
+  })
+  .refine((data) => data.password === data.confirm_password, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
+  });

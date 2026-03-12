@@ -11,10 +11,10 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Long Vacation: Maximum Shiok, Minimum Stress",
+  title: "The Fleet Queen",
   description: "Your ultimate travel companion for planning the perfect vacation",
   icons: {
-    icon: "/images/company-logo.png",
+    icon: "/images/logo.png",
   },
 };
 

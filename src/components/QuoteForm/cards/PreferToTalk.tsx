@@ -2,7 +2,7 @@ import { Phone, Mail } from "lucide-react";
 
 export default function PreferToTalk() {
   return (
-    <div className="bg-white rounded-[2rem] p-8 border border-gray-100 shadow-xl shadow-gray-200/30 space-y-6">
+    <div className="bg-white rounded-4xl p-8 border border-gray-100 shadow-xl shadow-gray-200/30 space-y-6">
       <h3 className="text-xs font-black text-brand-primary tracking-wide border-b border-gray-50 pb-4">
         Prefer to talk first?
       </h3>

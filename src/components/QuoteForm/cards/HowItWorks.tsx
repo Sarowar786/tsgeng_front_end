@@ -7,7 +7,7 @@ export default function HowItWorks() {
   ];
 
   return (
-    <div className=" rounded-[2rem] p-8 text-white space-y-8 shadow-xl shadow-gray-200/30 relative overflow-hidden border ">
+    <div className=" rounded-4xl p-8 text-white space-y-8 shadow-xl shadow-gray-200/30 relative overflow-hidden border ">
       <h3 className="text-sm font-bold tracking-wide text-brand-primary">
         How the process works
       </h3>
