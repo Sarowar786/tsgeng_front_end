@@ -3,31 +3,23 @@
 import Link from "next/link";
 import Image from "next/image";
 import { FieldValues, useForm } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import leftimage from "../../../../public/images/company-logo.png";
-import logo from "../../../../public/images/logonav.png";
+import rightImage from "../../../../public/images/bannerImage.jpg";
+import logo from "../../../../public/images/logo.png";
 import { useLoginMutation } from "@/redux/api/authApi";
 import { useDispatch } from "react-redux";
 import { setRefreshToken, setUser } from "@/redux/features/authSlice";
-import toast from "react-hot-toast";
 import { useRouter, useSearchParams } from "next/navigation";
-
-// ✅ 1) Zod schema: rules এখানে define হবে
-const loginSchema = z.object({
-  email: z
-    .string()
-    .trim()
-    .nonempty("Email is required")
-    .email("Invalid email address"),
-  password: z
-    .string()
-    .min(1, "Password is required")
-    .max(10, "Password max characters"),
-});
+import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { loginSchema } from "@/components/validation/validation";
+import { toast } from "sonner";
 
 export default function LoginPage() {
-  // ✅ 3) useForm সেটআপ + zodResolver
+  const [showPassword, setShowPassword] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -37,10 +29,12 @@ export default function LoginPage() {
     defaultValues: {
       email: "",
       password: "",
+      terms: false,
     },
   });
 
-  const [loginUser, { isLoading }] = useLoginMutation();
+  const [loginUser] = useLoginMutation();
+
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -51,40 +45,37 @@ export default function LoginPage() {
     const payload = {
       identifier: String(data.email).trim(),
       password: String(data.password),
+      accepted_terms: data.terms,
     };
-    console.log("payload", payload);
 
     try {
+
       const response = await loginUser(payload).unwrap();
-      console.log("response ", response);
 
       if (response.success && response?.data?.access) {
+
         dispatch(setUser({ token: response.data.access }));
         dispatch(setRefreshToken({ refresh_token: response.data.refresh }));
-        toast.success("Login Successfull", {
+
+        toast.success("Login Successful", {
           style: {
             background: "#1AC19C",
             color: "#fff",
             border: "1px solid #F97316",
           },
-          iconTheme: {
-            primary: "#F97316",
-            secondary: "#111827",
-          },
         });
 
-        router.push(callbackUrl);
-        return;
+        router.push('/comingsoon');
       }
+
     } catch (err: any) {
-      console.log("FULL ERROR:", err);
 
       const backend = err?.data;
 
       let msg = "Something went wrong. Please try again.";
 
       if (backend) {
-        // Case 1: Field level error
+
         if (backend?.error) {
           const firstKey = Object.keys(backend.error)[0];
           if (firstKey && backend.error[firstKey]?.length > 0) {
@@ -92,7 +83,6 @@ export default function LoginPage() {
           }
         }
 
-        // Case 2: General message
         if (backend?.message) {
           msg = backend.message;
         }
@@ -108,55 +98,51 @@ export default function LoginPage() {
     }
   };
 
-
   return (
     <div className="min-h-screen w-full grid grid-cols-1 lg:grid-cols-2">
-      {/* Left: Image */}
-      <div className="relative hidden lg:block border-r border-r-amber-50">
-        <Image
-          src={leftimage}
-          alt="Campus"
-          fill
-          className="object-content"
-          priority
-        />
-        {/* optional overlay blur / tint */}
-        <div className="absolute inset-0 bg-black/10" />
-      </div>
-
-      {/* Right: Form */}
-      <div className="flex items-center justify-center px-6 py-12 bg-gray-50">
+      {/* LEFT SIDE */}
+      <div className="flex items-center justify-center px-6 py-12 bg-white">
         <div className="w-full max-w-md">
           {/* Logo */}
           <div className="flex flex-col items-center">
-            <Link href={"/"} className="w-60 flex items-center justify-center">
+            <Link href="/" className="w-60 flex items-center justify-center">
               <Image src={logo} alt="logo" />
             </Link>
-            <h1 className="mt-4 text-2xl font-semibold text-gray-900">
-              Hey! Welcome back
+
+            <h1 className="mt-4 text-2xl font-semibold text-primary">
+              Login to Your Account
             </h1>
-            <p className="mt-1 text-sm text-gray-500">
-              Sign in to your account
+
+            <p className="mt-1 text-sm text-brand-primary">
+              Join the community of prepared individuals
             </p>
           </div>
 
-          {/* Form */}
+          {/* FORM */}
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="mt-8 space-y-4"
             noValidate
           >
-            {/* Email */}
+            {/* EMAIL */}
             <div>
-              <label className="text-sm text-gray-700">Email</label>
-              <input
+              <label className="text-[16px] font-medium text-brand-primary">
+                Email Address
+              </label>
+
+              <Input
                 type="email"
-                placeholder="Enter your email"
-                className={`mt-1 w-full rounded-lg border px-4 py-3 text-sm outline-none transition
-                  ${errors.email ? "border-red-500" : "border-gray-200 focus:border-orange-500"}
+                placeholder="john@gmail.com"
+                className={`mt-1 w-full h-[48px] 
+                  ${
+                    errors.email
+                      ? "border-red-500"
+                      : "border-gray-200 border focus:border-focus-primary"
+                  }
                 `}
                 {...register("email")}
               />
+
               {errors.email && (
                 <p className="mt-1 text-xs text-red-600">
                   {errors.email.message}
@@ -164,17 +150,35 @@ export default function LoginPage() {
               )}
             </div>
 
-            {/* Password */}
+            {/* PASSWORD */}
             <div>
-              <label className="text-sm text-gray-700">Password</label>
-              <input
-                type="password"
-                placeholder="Enter your password"
-                className={`mt-1 w-full rounded-lg border px-4 py-3 text-sm outline-none transition
-                  ${errors.password ? "border-red-500" : "border-gray-200 focus:border-orange-500"}
-                `}
-                {...register("password")}
-              />
+              <label className="text-[16px] font-medium text-brand-primary">
+                Password
+              </label>
+
+              <div className="relative">
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter your password"
+                  className={`mt-1 w-full h-[48px] 
+                    ${
+                      errors.password
+                        ? "border-red-500"
+                        : "border-gray-200 focus:border-focus-primary"
+                    }
+                  `}
+                  {...register("password")}
+                />
+
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-primary hover:text-black"
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+
               {errors.password && (
                 <p className="mt-1 text-xs text-red-600">
                   {errors.password.message}
@@ -184,33 +188,94 @@ export default function LoginPage() {
               <div className="mt-2 flex justify-end">
                 <Link
                   href="/forget-password"
-                  className="text-xs text-blue-600 hover:underline"
+                  className="text-sm font-normal text-primary hover:underline"
                 >
                   Forgot Password?
                 </Link>
               </div>
             </div>
 
-            {/* Login button */}
-            <button
+            {/* TERMS CHECKBOX */}
+            <div className="flex flex-col gap-1">
+              <div className="flex items-start gap-2 text-sm">
+                <input
+                  type="checkbox"
+                  id="terms"
+                  className="mt-1 w-4 h-4 accent-primary cursor-pointer"
+                  {...register("terms")}
+                />
+
+                <label htmlFor="terms" className="text-gray-600 cursor-pointer">
+                  I agree to the{" "}
+                  <Link
+                    href="/terms"
+                    className="text-primary font-medium hover:underline"
+                  >
+                    Terms of Services
+                  </Link>{" "}
+                  and{" "}
+                  <Link
+                    href="/privacy"
+                    className="text-primary font-medium hover:underline"
+                  >
+                    Privacy Policy
+                  </Link>
+                </label>
+              </div>
+
+              {errors.terms && (
+                <p className="text-xs text-red-600">
+                  {errors.terms.message as string}
+                </p>
+              )}
+            </div>
+
+            {/* LOGIN BUTTON */}
+            <Button
               type="submit"
               disabled={isSubmitting}
-              className="w-full rounded-lg bg-orange-500 hover:bg-orange-600 transition text-white font-semibold py-3 disabled:opacity-60"
+              className="w-full h-[48px]"
             >
-              {isSubmitting ? "Logging in..." : "Log In"}
-            </button>
+              {isSubmitting ? "Logging in..." : "Log in"}
+            </Button>
 
-            {/* Footer */}
-            <p className="text-center text-sm text-gray-500 mt-6">
+            {/* FOOTER */}
+            <p className="text-center text-sm text-primary mt-6">
               Don&apos;t have an account?{" "}
               <Link
                 href="/register"
-                className="text-orange-500 font-semibold hover:underline"
+                className="text-primary font-semibold hover:underline"
               >
                 Register
               </Link>
             </p>
           </form>
+        </div>
+      </div>
+
+      {/* RIGHT IMAGE */}
+      <div className="relative hidden lg:block border-r border-r-amber-50">
+        <Image
+          src={rightImage}
+          alt="Campus"
+          fill
+          className="object-cover"
+          priority
+        />
+
+        <div className="absolute inset-0 bg-[#530045]/40" />
+
+        <div className="absolute flex items-center text-center justify-center w-full h-full">
+          <div className="w-full text-white space-y-3">
+            <h2 className="text-[36px] font-bold leading-snug">
+              Start Your Preparedness Journey
+            </h2>
+
+            <p className="text-[20px] font-normal text-gray-200">
+              Access premium gear, expert knowledge, <br /> and a supportive
+              community
+            </p>
+          </div>
         </div>
       </div>
     </div>

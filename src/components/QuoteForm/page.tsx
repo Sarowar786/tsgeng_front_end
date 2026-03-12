@@ -20,6 +20,9 @@ import { quoteSchema } from "../validation/validation";
 import WhyFleetQuote from "./cards/WhyFleetQuote";
 import PreferToTalk from "./cards/PreferToTalk";
 import HowItWorks from "./cards/HowItWorks";
+import { toast } from "sonner";
+import { Button } from "../ui/button";
+import { Textarea } from "../ui/textarea";
 
 type QuoteFormValues = z.infer<typeof quoteSchema>;
 
@@ -68,7 +71,7 @@ export default function QuoteForm() {
     const isValid = await form.trigger(fieldsToValidate);
     if (isValid) {
       setCurrentStep((prev) => Math.min(prev + 1, steps.length));
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      // window.scrollTo({ top: 100, behavior: "smooth" });
     }
   };
 
@@ -82,7 +85,10 @@ export default function QuoteForm() {
     console.log("Form Data:", data);
     await new Promise((resolve) => setTimeout(resolve, 2000));
     setIsSubmitting(false);
-    alert("Quote request submitted successfully!");
+    // alert("Quote request submitted successfully!");
+    toast.success("Quote request submitted successfully!");
+    form.reset();
+    setCurrentStep(1);
   };
 
   return (
@@ -112,9 +118,9 @@ export default function QuoteForm() {
 
         {/* Stepper Content */}
         <div className="relative mb-12 px-4">
-          <div className="absolute top-5 left-8 right-8 h-[2px] bg-gray-100 -z-0" />
+          <div className="absolute top-5 left-8 right-8 h-[2px] bg-gray-100 z-0" />
           <div
-            className="absolute top-5 left-8 h-[2px] bg-primary transition-all duration-500 -z-0"
+            className="absolute top-5 left-8 h-[2px] bg-primary transition-all duration-500 z-0"
             style={{
               width: `${((currentStep - 1) / (steps.length - 1)) * 100}%`,
             }}
@@ -368,7 +374,7 @@ export default function QuoteForm() {
                           .watch("vehicleTypes")
                           .includes(type);
                         return (
-                          <button
+                          <Button
                             key={type}
                             type="button"
                             onClick={() => {
@@ -385,21 +391,14 @@ export default function QuoteForm() {
                                 ]);
                               }
                             }}
-                            className={`p-3.5 rounded-xl border text-sm font-medium transition-all text-left flex items-center gap-3 ${
+                            className={`p-3.5 text-left border rounded-xl flex items-center gap-3 ${
                               isSelected
-                                ? "border-primary bg-pink-50 text-primary shadow-sm shadow-pink-100"
-                                : "border-gray-100 bg-gray-50/30 text-gray-700 hover:bg-white hover:border-pink-100"
+                                ? "border-primary hover:text-white bg-pink-50 text-primary shadow-sm shadow-pink-100"
+                                : "border-gray-300 bg-gray-50/30 text-gray-700 hover:bg-white hover:border-pink-100"
                             }`}
                           >
-                            <div
-                              className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-colors ${isSelected ? "bg-primary border-primary" : "border-gray-200 bg-white"}`}
-                            >
-                              {isSelected && (
-                                <Check className="w-3.5 h-3.5 text-white stroke-[3]" />
-                              )}
-                            </div>
                             {type}
-                          </button>
+                          </Button>
                         );
                       })}
                     </div>
@@ -409,6 +408,7 @@ export default function QuoteForm() {
                     <label className="text-sm font-semibold text-gray-700">
                       Preferred Makes (optional)
                     </label>
+                    <p className="text-xs text-gray-400">Select all that apply (leave blank for no preference)</p>
                     <div className="flex flex-wrap gap-2">
                       {[
                         "Ford",
@@ -423,7 +423,7 @@ export default function QuoteForm() {
                       ].map((make) => {
                         const isSelected = form.watch("makes")?.includes(make);
                         return (
-                          <button
+                          <Button
                             key={make}
                             type="button"
                             onClick={() => {
@@ -439,12 +439,57 @@ export default function QuoteForm() {
                             }}
                             className={`px-4 py-1.5 rounded-full border text-xs font-bold transition-all ${
                               isSelected
-                                ? "bg-gray-900 text-white border-transparent"
-                                : "border-gray-200 bg-white text-gray-500 hover:border-gray-900"
+                                ? "bg-primary/80 text-white border-transparent"
+                                : "border-gray-200 bg-white text-gray-500 hover:border-primary"
                             }`}
                           >
                             {make}
-                          </button>
+                          </Button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <label className="text-sm font-semibold text-gray-700">
+                     Upfit / Equipment Needs 
+                    </label>
+                    <p className="text-xs text-gray-400">Any special equipment or upfits required?</p>
+                    <div className="flex flex-wrap gap-2">
+                      {[
+                        "Utility Body",
+                        "Liftgate",
+                        "Shelving/ Racking ",
+                        "Towing Package",
+                        "Fleet Graphics",
+                        "GPS/ Telematics",
+                        "No Upfits",
+                        "Emergency lighting",
+                      ].map((make) => {
+                        const isSelected = form.watch("makes")?.includes(make);
+                        return (
+                          <Button
+                            key={make}
+                            type="button"
+                            onClick={() => {
+                              const current = form.getValues("makes") || [];
+                              if (current.includes(make)) {
+                                form.setValue(
+                                  "makes",
+                                  current.filter((m) => m !== make),
+                                );
+                              } else {
+                                form.setValue("makes", [...current, make]);
+                              }
+                            }}
+                            className={`px-4 py-1.5 rounded-full border text-xs font-bold transition-all ${
+                              isSelected
+                                ? "bg-primary/80 text-white border-transparent"
+                                : "border-gray-200 bg-white text-gray-500 hover:border-primary"
+                            }`}
+                          >
+                            {make}
+                          </Button>
                         );
                       })}
                     </div>
@@ -454,10 +499,10 @@ export default function QuoteForm() {
                     <label className="text-sm font-semibold text-gray-700">
                       Special Requirements or Notes
                     </label>
-                    <textarea
+                    <Textarea
                       {...form.register("specialRequirements")}
                       placeholder="Specific trim levels, color preferences, warranty needs, upfit requirements, etc."
-                      className="w-full px-4 py-3 rounded-2xl border border-gray-100 bg-gray-50/50 focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none h-32 resize-none transition-all placeholder:text-gray-300"
+                      className="h-25"
                     />
                   </div>
                 </div>
@@ -533,7 +578,7 @@ export default function QuoteForm() {
 
                   <div className="flex items-start gap-4 p-5 bg-blue-50/50 border border-blue-100 rounded-2xl">
                     <div className="w-6 h-6 rounded-full bg-blue-500 text-white flex items-center justify-center shrink-0">
-                      <Check className="w-3.5 h-3.5 stroke-[3]" />
+                      <Check className="w-3.5 h-3.5 stroke-3" />
                     </div>
                     <p className="text-xs text-blue-900/70 leading-relaxed">
                       By submitting this form, I agree to be contacted by a
@@ -554,7 +599,7 @@ export default function QuoteForm() {
           </AnimatePresence>
 
           {/* Footer Controls */}
-          <div className="flex items-center justify-between pt-8 border-t border-gray-100">
+          <div className="flex items-center justify-between pt-8">
             {currentStep > 1 ? (
               <button
                 type="button"
@@ -569,23 +614,24 @@ export default function QuoteForm() {
             )}
 
             {currentStep < 4 ? (
-              <button
+              <Button
                 type="button"
                 onClick={nextStep}
-                className="bg-primary text-white px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-xs shadow-xl shadow-pink-200 hover:brightness-105 active:scale-95 transition-all flex items-center gap-3"
+                className=" px-8 py-4 rounded-2xl uppercase tracking-widest active:scale-95 transition-all flex items-center gap-3"
               >
                 Continue
                 <ChevronRight className="w-4 h-4" />
-              </button>
+              </Button>
             ) : (
-              <button
+              <Button
                 type="submit"
+                // onClick={() => handleSubmit(onSubmit)}
                 disabled={isSubmitting}
-                className="bg-primary text-white px-10 py-4 rounded-2xl font-black uppercase tracking-widest text-xs shadow-xl shadow-pink-200 hover:brightness-105 active:scale-95 transition-all disabled:opacity-50 flex items-center gap-3"
+                className="px-10 py-4 rounded-2xl uppercase tracking-widest active:scale-95 transition-all disabled:opacity-50 flex items-center gap-3"
               >
                 {isSubmitting ? "Processing..." : "Submit Quote Request"}
                 {!isSubmitting && <Sparkles className="w-4 h-4" />}
-              </button>
+              </Button>
             )}
           </div>
         </form>

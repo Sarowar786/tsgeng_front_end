@@ -59,7 +59,7 @@ export default function Navbar() {
                   Request a Quote
                 </Button>
                 <Button className='bg-transparent text-brand-primary border border-brand-primary hover:bg-primary hover:text-white duration-300 font-normal text-[16px] rounded-xl hover:border-primary cursor-pointer h-10'>
-                  Login
+                  Admin Login
                 </Button>
               </div>
             </SheetContent>
@@ -71,8 +71,8 @@ export default function Navbar() {
           <Button onClick={()=>{router.push('/requestquote')}} className='bg-primary text-white border-brand-primary hover:bg-primary hover:text-white duration-300 font-normal text-[16px] rounded-xl hover:border-none cursor-pointer h-10'>
             Request a Quote
           </Button>
-          <Button className='bg-transparent text-brand-primary border border-brand-primary hover:bg-primary hover:text-white duration-300 font-normal text-[16px] rounded-xl hover:border-primary cursor-pointer h-10'>
-            Login
+          <Button onClick={()=>{router.push('/login')}} className='bg-transparent text-brand-primary border border-brand-primary hover:bg-primary hover:text-white duration-300 font-normal text-[16px] rounded-xl hover:border-primary cursor-pointer h-10'>
+            Admin Login
           </Button>
         </div>
       </div>
